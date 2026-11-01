@@ -23,7 +23,7 @@ jobs:
       - name: Prepare public website
         run: |
           mkdir -p _site
-          cp index.html .nojekyll _site/
+          cp -r index.html favicon.svg .nojekyll site assets data _site/
       - name: Upload website
         uses: actions/upload-pages-artifact@v5
         with:

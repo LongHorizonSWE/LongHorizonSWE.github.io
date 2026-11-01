@@ -1,18 +1,312 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Long-Horizon Software Engineering Agents: From Tasks to Projects</title>
-    <meta name="description" content="Project website for the Long-Horizon Software Engineering Agents survey. Coming soon.">
-    <link rel="canonical" href="https://longhorizonswe.github.io/">
-  </head>
-  <body>
-    <main>
-      <h1>Long-Horizon Software Engineering Agents</h1>
-      <p>From Tasks to Projects</p>
-      <p>Project website coming soon.</p>
-      <p><a href="https://github.com/LongHorizonSWE/Awesome-LongHorizonSWE">GitHub repository</a></p>
-    </main>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Long-Horizon Software Engineering Agents: From Tasks to Projects</title>
+  <meta name="description" content="A survey of software engineering agents that must keep working on software they have already produced: benchmarks, harness design, training, evaluation, and open problems, with a library of 439 references.">
+  <link rel="canonical" href="https://longhorizonswe.github.io/">
+  <meta name="theme-color" content="#f2ede3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e1312" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Long-Horizon Software Engineering Agents: From Tasks to Projects">
+  <meta property="og:description" content="What changes when an agent must keep working on software it has already produced.">
+  <meta property="og:url" content="https://longhorizonswe.github.io/">
+  <meta property="og:image" content="https://longhorizonswe.github.io/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,0..100;1,9..144,300..700,0..100&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="site/styles.css?v=4">
+  <script>
+    try { const t = localStorage.getItem("lhswe-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"ScholarlyArticle","name":"Long-Horizon Software Engineering Agents: From Tasks to Projects","datePublished":"2026","url":"https://longhorizonswe.github.io/",
+   "author":[{"@type":"Person","name":"Meng Luo"},{"@type":"Person","name":"Yanlin Li"},{"@type":"Person","name":"Kaixin Li"},{"@type":"Person","name":"Yuchen Tian"},{"@type":"Person","name":"Shidong Cao"},{"@type":"Person","name":"Yanyu Chen"},{"@type":"Person","name":"Xiangru Jian"},{"@type":"Person","name":"Yan Yang"},{"@type":"Person","name":"Pengfei Zhou"},{"@type":"Person","name":"Ziyang Luo"},{"@type":"Person","name":"Hongzhan Lin"}],
+   "sameAs":["https://github.com/LongHorizonSWE/Awesome-LongHorizonSWE"]}
+  </script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="bar" id="top">
+  <a class="mark" href="#top" aria-label="Long-Horizon SWE, back to top">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 21h26"/><path d="M5 25.5h22" opacity=".55"/><path d="M8 29.5h16" opacity=".3"/><path d="M9 21a7 7 0 0 1 14 0"/></svg>
+    <span>Long-Horizon <i>SWE</i></span>
+  </a>
+  <nav aria-label="Sections">
+    <a href="#shift">Survey</a>
+    <a href="#findings">Findings</a>
+    <a href="#measures">Measures</a>
+    <a href="#plates">Plates</a>
+    <a href="#problems">Problems</a>
+    <a href="#library">Library</a>
+    <a href="#cite">Cite</a>
+  </nav>
+  <button class="theme" type="button" aria-label="Switch colour theme"><span aria-hidden="true"></span></button>
+</header>
+
+<main id="main">
+
+<!-- Hero: a generative stratigraphy of commits -->
+<section class="hero" aria-labelledby="title">
+  <canvas class="strata" aria-hidden="true"></canvas>
+  <div class="hero-copy">
+    <p class="kicker"><span>A survey</span><span>2026</span><span>439 references</span></p>
+    <h1 id="title">Long-Horizon<br>Software Engineering<br><em>Agents</em></h1>
+    <p class="subtitle">From <em>tasks</em> to <em>projects</em></p>
+    <p class="authors">
+      <span>Meng Luo<sup>1*</sup></span> <span>Yanlin Li<sup>1*</sup></span> <span>Kaixin Li<sup>1</sup></span>
+      <span>Yuchen Tian<sup>2</sup></span> <span>Shidong Cao<sup>2</sup></span> <span>Yanyu Chen<sup>3</sup></span>
+      <span>Xiangru Jian<sup>4</sup></span> <span>Yan Yang<sup>5</sup></span> <span>Pengfei Zhou<sup>1</sup></span>
+      <span>Ziyang Luo<sup>2</sup></span> <span>Hongzhan Lin<sup>1†</sup></span>
+    </p>
+    <p class="affiliations">
+      <span><sup>1</sup>National University of Singapore</span> <span><sup>2</sup>Hong Kong Baptist University</span>
+      <span><sup>3</sup>The Chinese University of Hong Kong</span> <span><sup>4</sup>University of Waterloo</span>
+      <span><sup>5</sup>The Australian National University</span>
+    </p>
+    <p class="marks"><span>* Equal contribution</span> <span>† Corresponding author</span></p>
+    <div class="actions">
+      <a class="btn primary" href="#shift">Read the survey <span aria-hidden="true">↓</span></a>
+      <a class="btn" href="https://github.com/LongHorizonSWE/Awesome-LongHorizonSWE">GitHub</a>
+      <a class="btn" href="#library">Reference library</a>
+      <a class="btn" href="#cite">BibTeX</a>
+    </div>
+  </div>
+  <figure class="legend" aria-hidden="true">
+    <figcaption>
+      <b>Fig. 0</b> Each line is a checkpoint laid on the last.
+      <span class="k fault">fault</span> a regression;
+      <span class="k repair">seam</span> its revision.
+      Old strata compress but never vanish.
+    </figcaption>
+    <p class="meter"><span>t = <b data-t>0</b></span><span><i>R</i><sub>t</sub> <b data-r>1.00</b></span><span><i>F</i><sub>t</sub> <b data-f>1.00</b></span></p>
+  </figure>
+</section>
+
+<!-- §1 -->
+<section class="sec" id="shift" aria-labelledby="shift-h">
+  <div class="rail"><span class="num">§1</span><span class="rail-label">The shift</span></div>
+  <div class="body">
+    <h2 id="shift-h">Projects accumulate. <em class="sub">Today’s changes constrain tomorrow’s work.</em></h2>
+    <div class="cols">
+      <p class="lede">Software engineering agents can now navigate repositories, run tests, and resolve many real GitHub issues. Most evaluations, however, score each issue in isolation and discard the agent’s patch afterward, whereas real projects accumulate: today’s changes constrain tomorrow’s work. This survey examines what changes when an agent must keep working on software it has already produced.</p>
+      <p>We compare evaluation protocols on two axes: who produces the state that the next request starts from, and whether behavior accepted earlier is checked again. Along these axes, we organize runtime mechanisms, training methods, and evaluation practice, propose measures of retained functionality and of conformance to active requirements, and outline open problems that center on <em>selective revision</em>: keeping useful code and knowledge while correcting what later changes invalidate.</p>
+    </div>
+    <figure class="plate wide">
+      <button class="plate-img" type="button" data-open="1" aria-label="Enlarge Plate I"><img src="assets/figures/figure-1.webp" width="1600" height="703" alt="An illustrated landscape: robots repair a single block, build a house from blocks, and maintain a growing village, while signposts mark the requests of a continuing project."></button>
+      <figcaption><b>Plate I.</b> <strong>From tasks to projects.</strong> In continuing work, each request starts from the state that earlier work left; the agent works from the current requirements and brings its retained knowledge, and selective revision corrects what later changes invalidate.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- §2 -->
+<section class="sec" id="findings" aria-labelledby="findings-h">
+  <div class="rail"><span class="num">§2</span><span class="rail-label">Findings</span></div>
+  <div class="body">
+    <h2 id="findings-h">What the survey finds</h2>
+    <ol class="findings">
+      <li><span class="fn">i</span><h3>Building on its own work is harder.</h3><p>Controlled comparisons show that agents succeed markedly less often when they build on their own earlier work, and retaining the earlier conversation does not close this gap.</p></li>
+      <li><span class="fn">ii</span><h3>Length alone is not continuity.</h3><p>Only agent-produced chains that recheck earlier obligations can show whether an agent stays responsible for its own earlier work.</p></li>
+      <li><span class="fn">iii</span><h3>Training stays within one request.</h3><p>Runtime mechanisms act on state that outlives a request, yet almost all training in the reviewed work stays within a single request.</p></li>
+      <li><span class="fn">iv</span><h3>Evaluation lacks a common report.</h3><p>Benchmarks do not yet report cross-stage retention, recovery, and cost in a common form; retained functionality and conformance to active requirements can anchor one.</p></li>
+    </ol>
+
+    <div class="gap">
+      <div class="gap-text">
+        <p class="eyebrow">Evidence · ChainSWE, GPT-5.5</p>
+        <h3>The ground shifts when the agent inherits its own patches.</h3>
+        <p>Per-issue resolution falls from 69.1% when each issue starts from earlier reference fixes, to 49.0% from the agent’s own patches, and 47.4% when the earlier dialogue is kept as well. All 21 combinations of the seven models and three configurations that ChainSWE reports lose accuracy from Oracle to Seq, by 29% to 48% in relative terms.</p>
+        <button type="button" class="link" data-open="7">See Plate VII →</button>
+      </div>
+      <div class="gap-chart" role="img" aria-label="Per-issue resolution: Oracle 69.1 percent, Seq 49.0 percent, Seq plus Mem 47.4 percent.">
+        <div class="col" style="--v:69.1"><span class="val">69.1</span><span class="gbar"></span><span class="lab">Oracle<small>reference fixes</small></span></div>
+        <div class="col" style="--v:49.0"><span class="val">49.0</span><span class="gbar"></span><span class="lab">Seq<small>own patches</small></span></div>
+        <div class="col" style="--v:47.4"><span class="val">47.4</span><span class="gbar"></span><span class="lab">Seq+Mem<small>+ dialogue</small></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- §3 -->
+<section class="sec" id="questions" aria-labelledby="questions-h">
+  <div class="rail"><span class="num">§3</span><span class="rail-label">Questions</span></div>
+  <div class="body">
+    <h2 id="questions-h">Three research questions</h2>
+    <div class="rqs">
+      <article><p class="rq">RQ1</p><h3>What must persist for an agent to continue a software project?</h3><p>Which artifacts, requirements, and retained knowledge connect earlier decisions to later work, and which benchmark protocols preserve those connections?</p></article>
+      <article><p class="rq">RQ2</p><h3>How do agents preserve useful progress while revising invalidated work?</h3><p>How do context, execution, planning, verification, and learning interact, and under what conditions do memory, coordination, or feedback help?</p></article>
+      <article><p class="rq">RQ3</p><h3>How can reliable progress across changes be measured?</h3><p>How can evaluation separate local success from retained functionality, conformance to active requirements, successful recovery, operational cost, and handoff quality?</p></article>
+    </div>
+    <h3 class="minor">Contributions</h3>
+    <ul class="contrib">
+      <li><b>A vocabulary for continuing projects</b> and a comparison of benchmark protocols built on it. Length alone does not make a benchmark a test of continuing work.</li>
+      <li><b>A mapping from runtime and training mechanisms</b> to the persistent state they manage. Recovering knowledge and repairing inherited code turn out to be separate problems.</li>
+      <li><b>A reporting framework</b> that separates retained behavior from new progress, with rates for retained functionality and for conformance to active requirements.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- §4 -->
+<section class="sec" id="measures" aria-labelledby="measures-h">
+  <div class="rail"><span class="num">§4</span><span class="rail-label">Measures</span></div>
+  <div class="body">
+    <h2 id="measures-h">Measuring what persists</h2>
+    <p class="intro">Both measures are defined over an obligation record that the evaluator holds, and read at each checkpoint <i>t</i> of a run.</p>
+    <div class="measures">
+      <article>
+        <p class="sym"><i>R</i><sub>t</sub></p>
+        <h3>Retained functionality</h3>
+        <p class="q">Does behavior accepted earlier still work?</p>
+        <p>The share of earlier obligations, still active under the current specification and with an eligible check, whose checks all still pass at checkpoint <i>t</i>.</p>
+      </article>
+      <article>
+        <p class="sym"><i>F</i><sub>t</sub></p>
+        <h3>Conformance to active requirements</h3>
+        <p class="q">Does the project now satisfy everything currently required of it?</p>
+        <p>The share of requirements the record lists as active at <i>t</i>, including requests the agent failed, whose checks pass at <i>t</i>.</p>
+      </article>
+    </div>
+
+    <div class="chain">
+      <div class="chain-head">
+        <div>
+          <p class="eyebrow">Try it · after Plate XII</p>
+          <h3>Equal stage success can conceal different chain outcomes.</h3>
+          <p>Each row is a five-stage chain, and a chain counts as successful only when all five stages pass. Click a stage to flip it, or move the same failures around.</p>
+        </div>
+        <div class="chain-btns">
+          <button type="button" class="btn small" data-chain="concentrate">Concentrate failures</button>
+          <button type="button" class="btn small" data-chain="scatter">Scatter failures</button>
+        </div>
+      </div>
+      <div class="chain-grid" role="group" aria-label="Chains and stages"></div>
+      <p class="chain-read"><span>Stage success <b data-stage>—</b></span><span>Chain success <b data-chainrate>—</b></span></p>
+    </div>
+  </div>
+</section>
+
+<!-- §5 -->
+<section class="sec" id="guidance" aria-labelledby="guidance-h">
+  <div class="rail"><span class="num">§5</span><span class="rail-label">Guidance</span></div>
+  <div class="body">
+    <h2 id="guidance-h">Design priorities and what to measure</h2>
+    <div class="table-wrap">
+      <table class="ledger">
+        <thead><tr><th scope="col">Work condition</th><th scope="col">Design priority</th><th scope="col">What to measure</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Bounded request</th><td data-l="Design priority">Localization, execution, bounded repair</td><td data-l="What to measure">Resolved cases and complete attempt cost</td></tr>
+          <tr><th scope="row">Long single request</th><td data-l="Design priority">Context selection and continuation</td><td data-l="What to measure">Overflow, early stopping, information loss</td></tr>
+          <tr><th scope="row">Continuing work</th><td data-l="Design priority">Revision-aware retrieval, regression tests, recovery</td><td data-l="What to measure">Agent-produced chains; earlier obligations rechecked</td></tr>
+          <tr><th scope="row">Parallel implementation</th><td data-l="Design priority">Dependency agreement; isolation</td><td data-l="What to measure">Integration and coordination cost</td></tr>
+          <tr><th scope="row">Interrupted work</th><td data-l="Design priority">Checkpoint with handoff notes</td><td data-l="What to measure">Matched takeover and recovery</td></tr>
+          <tr><th scope="row">Shared or deployed project</th><td data-l="Design priority">Integrating outside edits; bounded authority</td><td data-l="What to measure">Edits, review, service effects</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- §6 -->
+<section class="sec" id="plates" aria-labelledby="plates-h">
+  <div class="rail"><span class="num">§6</span><span class="rail-label">Plates</span></div>
+  <div class="body">
+    <h2 id="plates-h">Plates <em>from the survey</em></h2>
+    <p class="intro">Thirteen figures from the manuscript. Select a plate to read it at full size.</p>
+    <div class="plates" data-plates></div>
+  </div>
+</section>
+
+<!-- §7 -->
+<section class="sec" id="problems" aria-labelledby="problems-h">
+  <div class="rail"><span class="num">§7</span><span class="rail-label">Open problems</span></div>
+  <div class="body">
+    <h2 id="problems-h">Toward selective revision</h2>
+    <p class="intro">Seventeen open problems in five groups, each with what is known and a first experiment that would move it.</p>
+    <div class="problems" data-problems></div>
+    <blockquote class="closing"><p>Agents that revise in this way would let a team entrust a project to them and receive it back in better shape, with its history, its obligations, and the reasons behind its changes intact.</p></blockquote>
+  </div>
+</section>
+
+<!-- §8 -->
+<section class="sec" id="library" aria-labelledby="library-h">
+  <div class="rail"><span class="num">§8</span><span class="rail-label">Library</span></div>
+  <div class="body">
+    <h2 id="library-h">Reference library</h2>
+    <p class="intro">Every work the survey cites, newest first. Search by title, author, or venue.</p>
+    <div class="lib-tools">
+      <label class="search"><span class="vh">Search references</span><input type="search" placeholder="Search 439 references…" data-q autocomplete="off"></label>
+      <div class="chips" role="group" aria-label="Publication type" data-types>
+        <button type="button" aria-pressed="true" data-type="">All</button>
+        <button type="button" aria-pressed="false" data-type="conference">Conference</button>
+        <button type="button" aria-pressed="false" data-type="journal">Journal</button>
+        <button type="button" aria-pressed="false" data-type="preprint">Preprint</button>
+        <button type="button" aria-pressed="false" data-type="other">Other</button>
+      </div>
+    </div>
+    <p class="lib-count" aria-live="polite" data-count></p>
+    <div class="lib" data-lib><p class="lib-empty">Loading references…</p></div>
+  </div>
+</section>
+
+<!-- §9 -->
+<section class="sec" id="cite" aria-labelledby="cite-h">
+  <div class="rail"><span class="num">§9</span><span class="rail-label">Cite</span></div>
+  <div class="body">
+    <h2 id="cite-h">Citation and contents</h2>
+    <div class="cite-grid">
+      <div class="bib">
+        <div class="bib-head"><span>BibTeX</span><button type="button" class="copy" data-copy="bibtex">Copy</button></div>
+<pre id="bibtex">@misc{luo2026longhorizonswe,
+  title        = {Long-Horizon Software Engineering Agents: From Tasks to Projects},
+  author       = {Luo, Meng and Li, Yanlin and Li, Kaixin and Tian, Yuchen and Cao, Shidong and Chen, Yanyu and Jian, Xiangru and Yang, Yan and Zhou, Pengfei and Luo, Ziyang and Lin, Hongzhan},
+  year         = {2026},
+  howpublished = {\url{https://github.com/LongHorizonSWE/Awesome-LongHorizonSWE}},
+  note         = {Manuscript}
+}</pre>
+        <p class="contact">Contact <a href="mailto:mluo@u.nus.edu">mluo@u.nus.edu</a> · <a href="mailto:danielhzlin@nus.edu.sg">danielhzlin@nus.edu.sg</a></p>
+      </div>
+      <div>
+        <h3 class="minor">Contents</h3>
+        <ol class="toc">
+          <li><b>1</b><span>Introduction<small>Motivation and scope · Research questions · Related surveys and contributions</small></span></li>
+          <li><b>2</b><span>Background and Definitions<small>Software engineering agents · Task length and dependencies · Project state and task formulation · From program repair to continuing projects</small></span></li>
+          <li><b>3</b><span>Tasks and Benchmarks<small>Repository issue resolution · Feature and project development · Operations and security · Software maintenance and evolution · Interaction and external change · Benchmark comparison and selection</small></span></li>
+          <li><b>4</b><span>Harness Design<small>Execution and environment management · Context and memory management · Planning and multi-agent coordination · Verification and failure recovery · Security and access control</small></span></li>
+          <li><b>5</b><span>Training and Adaptation<small>Training tasks and environments · Trajectory generation and curation · Supervised fine-tuning and distillation · Preference optimization and RL · Memory and skill learning</small></span></li>
+          <li><b>6</b><span>Evaluation<small>Task and evaluator validity · Reliability across repeated runs · Retention and conformance · Trajectory analysis, recovery, and handoff · Cost and resource accounting · Developer impact</small></span></li>
+          <li><b>7</b><span>Discussion and Open Challenges<small>State consistency, feedback, and revision · Design and evaluation guidance · Open challenges</small></span></li>
+          <li><b>8</b><span>Conclusion</span></li>
+          <li><b>A</b><span>Additional Benchmark Settings</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <svg class="foot-strata" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 12C200 4 400 18 600 10s400 6 600-2"/><path d="M0 26C220 18 420 32 620 24s380 6 580-2"/><path d="M0 38C240 32 440 44 640 37s360 4 560-1"/><path d="M0 48C260 44 460 54 660 48s340 3 540 0"/><path d="M0 56C280 53 480 59 680 55s320 2 520 0"/></svg>
+  <div class="foot-in">
+    <p><b>Long-Horizon Software Engineering Agents</b> · From Tasks to Projects</p>
+    <p><a href="https://github.com/LongHorizonSWE/Awesome-LongHorizonSWE">Awesome-LongHorizonSWE</a> · <a href="https://github.com/LongHorizonSWE/longhorizonswe.github.io">Website source</a> · <a href="#top">Back to top ↑</a></p>
+    <p class="fine">Figures and text © the authors.</p>
+  </div>
+</footer>
+
+<dialog class="lightbox" aria-labelledby="lb-cap">
+  <button type="button" class="lb-close" aria-label="Close">×</button>
+  <button type="button" class="lb-nav prev" aria-label="Previous plate">‹</button>
+  <figure><img alt=""><figcaption id="lb-cap"></figcaption></figure>
+  <button type="button" class="lb-nav next" aria-label="Next plate">›</button>
+</dialog>
+
+<script src="site/content.js?v=4"></script>
+<script src="site/strata.js?v=4"></script>
+<script src="site/app.js?v=4"></script>
+</body>
 </html>
