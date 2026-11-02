@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,0..100;1,9..144,300..700,0..100&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="site/styles.css?v=4">
+  <link rel="stylesheet" href="site/styles.css?v=5">
   <script>
     try { const t = localStorage.getItem("lhswe-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
   </script>
@@ -50,9 +50,10 @@
 
 <main id="main">
 
-<!-- Hero: a generative stratigraphy of commits -->
+<!-- Hero: an endless blue-and-green handscroll, with the survey illustration mounted on it -->
 <section class="hero" aria-labelledby="title">
-  <canvas class="strata" aria-hidden="true"></canvas>
+  <canvas class="scroll" aria-hidden="true"></canvas>
+  <div class="hero-inner">
   <div class="hero-copy">
     <p class="kicker"><span>A survey</span><span>2026</span><span>439 references</span></p>
     <h1 id="title">Long-Horizon<br>Software Engineering<br><em>Agents</em></h1>
@@ -76,15 +77,11 @@
       <a class="btn" href="#cite">BibTeX</a>
     </div>
   </div>
-  <figure class="legend" aria-hidden="true">
-    <figcaption>
-      <b>Fig. 0</b> Each line is a checkpoint laid on the last.
-      <span class="k fault">fault</span> a regression;
-      <span class="k repair">seam</span> its revision.
-      Old strata compress but never vanish.
-    </figcaption>
-    <p class="meter"><span>t = <b data-t>0</b></span><span><i>R</i><sub>t</sub> <b data-r>1.00</b></span><span><i>F</i><sub>t</sub> <b data-f>1.00</b></span></p>
+  <figure class="hero-art">
+    <img src="assets/teaser.webp" width="1400" height="700" fetchpriority="high" alt="Illustration: small robots build a project over time, from a single block on a workbench, to a house raised on scaffolding, to a whole village whose older walls one robot is repairing.">
+    <span class="seal" aria-hidden="true">長</span>
   </figure>
+  </div>
 </section>
 
 <!-- §1 -->
@@ -305,8 +302,8 @@
   <button type="button" class="lb-nav next" aria-label="Next plate">›</button>
 </dialog>
 
-<script src="site/content.js?v=4"></script>
-<script src="site/strata.js?v=4"></script>
-<script src="site/app.js?v=4"></script>
+<script src="site/content.js?v=5"></script>
+<script src="site/scroll.js?v=5"></script>
+<script src="site/app.js?v=5"></script>
 </body>
 </html>

@@ -10,12 +10,13 @@ This repository hosts the project website for the survey. The `longhorizonswe.gi
 
 ```text
 index.html             page text and structure
-site/styles.css        design: paper, ink and strata, light and dark themes
-site/strata.js         the hero artwork (Fig. 0), a generative stratigraphy of checkpoints
+site/styles.css        design: paper and ink, light and dark themes
+site/scroll.js         the hero painting, an endless blue-and-green landscape handscroll drawn in the browser
 site/content.js        plate captions and the open-problems table
 site/app.js            plates and lightbox, open problems, chain demonstration, reference library
 data/references.json   the 439 cited references, copied from Awesome-LongHorizonSWE
 assets/figures/        the 13 manuscript figures (plates), copied from Awesome-LongHorizonSWE
+assets/teaser.webp     the survey illustration mounted in the hero
 assets/og.png          link preview image
 favicon.svg
 ```
