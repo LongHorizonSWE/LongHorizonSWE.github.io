@@ -165,15 +165,13 @@ h3 { font-family: var(--serif); font-weight: 500; }
 .plate.wide .plate-img { padding: 0; }
 .plate-img img { transition: transform .6s cubic-bezier(.2, .7, .2, 1); }
 .plate-img:hover img { transform: scale(1.012); }
-.plate figcaption, .plate-card figcaption { margin-top: 14px; font-size: 14.5px; line-height: 1.55; color: var(--ink-soft); max-width: 78ch; }
-.plate figcaption b, .plate-card figcaption b { font: 500 11.5px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--amber); margin-right: 6px; }
+.plate figcaption { margin-top: 14px; font-size: 14.5px; line-height: 1.55; color: var(--ink-soft); max-width: 78ch; }
+.plate figcaption b { font: 500 11.5px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--amber); margin-right: 6px; }
 .plate figcaption strong { color: var(--ink); font-weight: 600; }
 
-.plates { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 34px 26px; }
-.plate-card { margin: 0; }
-.plate-card .plate-img { padding: 14px; aspect-ratio: 4 / 3; display: grid; place-items: center; }
-.plate-card .plate-img img { width: 100%; height: 100%; object-fit: contain; }
-.plate-card figcaption { margin-top: 10px; font-size: 14px; color: var(--ink); }
+.plates { display: grid; gap: clamp(52px, 7vw, 88px); }
+.plates .plate-img { padding: clamp(8px, 1.6vw, 20px); background: #fff; }
+.plates .plate-img img { width: 100%; height: auto; }
 
 /* §2 findings */
 .findings { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--rule); }

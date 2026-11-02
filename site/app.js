@@ -16,14 +16,14 @@
     document.dispatchEvent(new Event("themechange"));
   });
 
-  // Plates
+  // Plates, shown in full with their captions
   const grid = $("[data-plates]");
-  grid.innerHTML = C.figures.map(([title, , w, h], i) => `
-    <figure class="plate-card">
+  grid.innerHTML = C.figures.map(([title, caption, w, h], i) => `
+    <figure class="plate">
       <button class="plate-img" type="button" data-open="${i + 1}" aria-label="Enlarge Plate ${ROMAN[i]}: ${esc(title)}">
         <img src="${file(i + 1)}" width="${w}" height="${h}" alt="" loading="lazy" decoding="async">
       </button>
-      <figcaption><b>Plate ${ROMAN[i]}</b> ${esc(title)}</figcaption>
+      <figcaption><b>Plate ${ROMAN[i]}</b> <strong>${esc(title)}</strong> ${esc(caption)}</figcaption>
     </figure>`).join("");
 
   // Lightbox
