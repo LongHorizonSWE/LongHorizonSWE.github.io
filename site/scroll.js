@@ -2,7 +2,8 @@
 //
 // Each range is painted once into a seamless strip (mineral azurite on the peaks, malachite on the slopes, ochre in
 // the foothills, hemp-fibre texture strokes, moss dots, pines), then the strips unroll at different speeds, nearer
-// ranges faster, as if the scroll were being opened. A long journey laid down range over range.
+// ranges faster, as if the scroll were being opened, while a skein of wild geese crosses the sky. A long journey laid
+// down range over range.
 (() => {
   const canvas = document.querySelector("canvas.scroll");
   if (!canvas) return;
@@ -11,10 +12,10 @@
   const darkQ = matchMedia("(prefers-color-scheme: dark)");
   const isDark = () => { const t = document.documentElement.dataset.theme; return t ? t === "dark" : darkQ.matches; };
 
-  // Daylight is mineral pigment on silk; night is the gold-outlined manner (jinbi) on dark silk, with a moon.
+  // Daylight is mineral pigment on silk; night is the gold-outlined manner (jinbi) on dark silk.
   const PALETTES = {
-    light: { silk: "#f2ede3", azure: "#2a5f8f", deep: "#1b4266", mal: "#3e8a6a", ochre: "#b9884c", line: "#22313a", moss: "#173b30", pine: "#2b5b45", wave: "#5f8cad", sun: "#c4553f" },
-    dark: { silk: "#0e1312", azure: "#3a6e98", deep: "#22496c", mal: "#33775c", ochre: "#6f5331", line: "#d1ad66", moss: "#0b1d17", pine: "#1f4a38", wave: "#4a7590", sun: "#ece2c2" },
+    light: { silk: "#f2ede3", azure: "#2a5f8f", deep: "#1b4266", mal: "#3e8a6a", ochre: "#b9884c", line: "#22313a", moss: "#173b30", pine: "#2b5b45", wave: "#5f8cad", goose: "#2b2a24" },
+    dark: { silk: "#0e1312", azure: "#3a6e98", deep: "#22496c", mal: "#33775c", ochre: "#6f5331", line: "#d1ad66", moss: "#0b1d17", pine: "#1f4a38", wave: "#4a7590", goose: "#dccb9c" },
   };
 
   // From the far range to the near bank. base and amp are fractions of the hero height; speed is px per second.
@@ -171,17 +172,37 @@
     strips = LAYERS.map(makeStrip);
   }
 
+  // A skein of wild geese in a chevron, each bird two brush strokes that beat slowly, crossing from left to right.
+  const GEESE = [[0, 0], [-1, -1], [-2, -2], [-3, -3], [-1, 1], [-2, 2], [-3, 3], [-4, 4]].map(([k, side], i) => ({
+    dx: k * 17 + Math.sin(i * 7.3) * 3, dy: side * 9 + Math.cos(i * 3.1) * 2, ph: i * 1.7, s: 6.6 - Math.abs(k) * 0.25,
+  }));
+  function drawGeese() {
+    const span = W + 320;
+    const lead = ((t * 15 + W * 0.66 + 160) % span) - 160;
+    const top = H * (W < 820 ? 0.42 : 0.13);
+    const scale = W < 820 ? 0.85 : 1;
+    ctx.save();
+    ctx.strokeStyle = P.goose; ctx.globalAlpha = 0.72; ctx.lineWidth = 1.35; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    for (const g of GEESE) {
+      const x = lead + g.dx * scale, y = top + g.dy * scale + Math.sin(t * 0.9 + g.ph) * 1.6;
+      // two wings arching up from the body, their tips rising and falling with the beat
+      const s = g.s * scale, beat = Math.sin(t * 3 + g.ph), arch = s * (0.55 + 0.25 * beat), tip = s * 0.35 * beat;
+      ctx.beginPath();
+      ctx.moveTo(x - s, y - tip);
+      ctx.quadraticCurveTo(x - s * 0.5, y - arch, x, y);
+      ctx.quadraticCurveTo(x + s * 0.5, y - arch, x + s * 0.95, y - tip);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
   function draw() {
     ctx.clearRect(0, 0, W, H);
-    // sun by day, moon by night, low over the far ranges
-    const sr = Math.max(13, Math.min(W, H) * 0.026);
-    ctx.globalAlpha = isDark() ? 0.85 : 0.8; ctx.fillStyle = P.sun;
-    ctx.beginPath(); ctx.arc(W * (W < 820 ? 0.82 : 0.9), H * (W < 820 ? 0.44 : 0.14), sr, 0, Math.PI * 2); ctx.fill();
-    ctx.globalAlpha = 1;
     for (const s of strips) {
       const off = (t * s.spec.speed) % L;
       for (let x = -off; x < W; x += L) ctx.drawImage(s.c, x, s.y, L, s.c.height / DPR);
     }
+    drawGeese();
     // wash of bare silk behind the title, as a painter leaves space for the inscription
     const wash = W < 820 ? ctx.createLinearGradient(0, 0, 0, H) : ctx.createLinearGradient(0, 0, W, 0);
     if (W < 820) { wash.addColorStop(0, rgba(P.silk, 0.9)); wash.addColorStop(0.55, rgba(P.silk, 0.82)); wash.addColorStop(0.75, rgba(P.silk, 0)); }
