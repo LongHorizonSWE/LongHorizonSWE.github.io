@@ -134,7 +134,7 @@
     const terms = q.value.toLowerCase().split(/\s+/).filter(Boolean);
     const list = refs.filter((r) => (!type || r.type === type || (type === "other" && r.type === "book")) &&
       terms.every((t) => r._hay.includes(t)));
-    countEl.textContent = `${list.length} of ${refs.length} references`;
+    countEl.textContent = terms.length || type ? `${list.length} matching ${list.length === 1 ? "reference" : "references"}` : "";
     if (!list.length) { lib.innerHTML = '<p class="lib-empty">No reference matches. Try fewer words.</p>'; return; }
     const years = new Map();
     list.forEach((r) => { const y = r.year ?? "Undated"; if (!years.has(y)) years.set(y, []); years.get(y).push(r); });

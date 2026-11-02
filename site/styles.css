@@ -302,6 +302,7 @@ h3 { font-family: var(--serif); font-weight: 500; }
 .chips { display: flex; gap: 6px; flex-wrap: wrap; }
 .chips button { padding: 8px 13px; border-radius: 999px; border: 1px solid var(--rule); background: transparent; color: var(--ink-soft); font: 500 13px/1 var(--sans); cursor: pointer; }
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.lib-count:empty { display: none; }
 .lib-count { margin: 0 0 18px; font: 12px/1 var(--mono); color: var(--ink-soft); }
 .lib { max-height: 920px; overflow-y: auto; padding-right: 8px; border-top: 1px solid var(--rule); scrollbar-width: thin; scrollbar-color: var(--rule) transparent; }
 .year h3 { position: sticky; top: 0; z-index: 1; display: flex; align-items: baseline; gap: 10px; margin: 0; padding: 18px 0 8px; background: var(--paper); font: 500 28px/1 var(--serif); }
