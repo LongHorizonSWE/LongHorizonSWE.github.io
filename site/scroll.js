@@ -14,8 +14,8 @@
 
   // Daylight is mineral pigment on silk; night is the gold-outlined manner (jinbi) on dark silk.
   const PALETTES = {
-    light: { silk: "#f2ede3", azure: "#2a5f8f", deep: "#1b4266", mal: "#3e8a6a", ochre: "#b9884c", line: "#22313a", moss: "#173b30", pine: "#2b5b45", wave: "#5f8cad", goose: "#2b2a24" },
-    dark: { silk: "#0e1312", azure: "#3a6e98", deep: "#22496c", mal: "#33775c", ochre: "#6f5331", line: "#d1ad66", moss: "#0b1d17", pine: "#1f4a38", wave: "#4a7590", goose: "#dccb9c" },
+    light: { silk: "#f2ede3", azure: "#2a5f8f", deep: "#1b4266", mal: "#3e8a6a", ochre: "#b9884c", line: "#22313a", moss: "#173b30", pine: "#2b5b45", goose: "#2b2a24" },
+    dark: { silk: "#0e1312", azure: "#3a6e98", deep: "#22496c", mal: "#33775c", ochre: "#3b3f33", line: "#d1ad66", moss: "#0b1d17", pine: "#1f4a38", goose: "#dccb9c" },
   };
 
   // From the far range to the near bank. base and amp are fractions of the hero height; speed is px per second.
@@ -23,7 +23,6 @@
     { base: 0.52, amp: 0.24, depth: 0.2, speed: 3.5, haze: 0.62, seed: 11 },
     { base: 0.6, amp: 0.27, depth: 0.22, speed: 6.5, haze: 0.4, seed: 23 },
     { base: 0.68, amp: 0.2, depth: 0.2, speed: 10, haze: 0.18, seed: 37 },
-    { water: true, top: 0.69, speed: 13 },
     { base: 0.83, amp: 0.13, depth: 0.2, speed: 19, haze: 0.04, seed: 53, pines: 1 },
     { base: 0.95, amp: 0.09, depth: 0.12, speed: 27, haze: 0, seed: 71, pines: 1.6 },
   ];
@@ -60,21 +59,6 @@
     const c = document.createElement("canvas");
     const g = c.getContext("2d");
     const r = rng(spec.seed || 5);
-    if (spec.water) {
-      const top = H * spec.top, h = H - top;
-      c.width = Math.round(L * DPR); c.height = Math.round(h * DPR); g.scale(DPR, DPR);
-      g.lineCap = "round";
-      // fish-scale ripples, fainter toward the far shore
-      for (let y = 6; y < h; y += 6 + y * 0.03) {
-        const k = y / h;
-        for (let x = r() * 30; x < L; x += 14 + r() * 40) {
-          const w = 7 + r() * 9 + k * 8;
-          g.strokeStyle = rgba(P.wave, 0.12 + 0.3 * k); g.lineWidth = 0.7 + k * 0.5;
-          for (const dx of [0, -L]) { g.beginPath(); g.arc(x + dx, y + w * 0.9, w, Math.PI * 1.22, Math.PI * 1.78); g.stroke(); }
-        }
-      }
-      return { c, y: top, spec };
-    }
     const f = ridge(spec.seed, Math.round(L / (spec.pines ? 150 : 120)));
     const yR = (x) => H * (spec.base - spec.amp * f(x / L));
     const top = H * (spec.base - spec.amp) - 34;
@@ -87,15 +71,23 @@
     const far = (col, a = 1) => rgba(mix(col, P.silk, spec.haze), a);
     const band = (bottom - top) * 0.78;
 
-    // mineral wash measured from each column's own ridge: azurite peaks, malachite slopes, ochre feet, then mist
-    for (let x = 0; x < L; x += step) {
-      const y = yR(x), lift = f(x / L);                     // only the high peaks carry azurite
-      const gr = g.createLinearGradient(0, y, 0, y + band);
+    // mineral wash: azurite on the high peaks, malachite on the slopes, measured from each column's own ridge; the
+    // ochre foothills and the mist below sit at fixed heights, so the colour bands run level across the range.
+    // Columns are laid in whole device pixels, clipped to the ridge, so they neither overlap nor leave a seam.
+    g.save(); outline(); g.clip();
+    g.setTransform(1, 0, 0, 1, 0, -top * DPR);
+    const yOchre = H * spec.base + band * 0.05;
+    for (let xd = 0; xd < c.width; xd += 2) {
+      const x = (xd + 1) / DPR, y = yR(x) - 4, lift = f(x / L), span = bottom - y;
+      const at = (yy) => Math.min(0.99, Math.max(0, (yy - y) / span));
+      const gr = g.createLinearGradient(0, y * DPR, 0, bottom * DPR);
+      const sOch = Math.max(at(yOchre), 0.3), sMal = Math.min(at(y + band * 0.24), sOch - 0.08);
       gr.addColorStop(0, far(mix(P.deep, P.mal, Math.max(0, 1 - lift * 1.8))));
-      gr.addColorStop(0.1, far(mix(P.azure, P.mal, Math.max(0, 1 - lift * 1.4))));
-      gr.addColorStop(0.32, far(P.mal)); gr.addColorStop(0.62, far(P.ochre, 0.62)); gr.addColorStop(1, rgba(P.silk, 0));
-      g.fillStyle = gr; g.fillRect(x, y, step + 0.6, band);
+      gr.addColorStop(Math.min(at(y + band * 0.08), sMal - 0.04), far(mix(P.azure, P.mal, Math.max(0, 1 - lift * 1.4))));
+      gr.addColorStop(sMal, far(P.mal)); gr.addColorStop(sOch, far(P.ochre, 0.62)); gr.addColorStop(1, rgba(P.silk, 0));
+      g.fillStyle = gr; g.fillRect(xd, y * DPR, 2, span * DPR);
     }
+    g.restore();
 
     g.save(); outline(); g.clip();
     // folds: inner contours that repeat the ridge lower down, giving each massif its stacked rock faces
@@ -145,16 +137,27 @@
       g.fillStyle = rgba(P.moss, (0.25 + r() * 0.45) * (1 - spec.haze));
       g.beginPath(); g.ellipse(x, y, 1 + r() * 1.3, 0.7 + r() * 0.8, 0, 0, Math.PI * 2); g.fill();
     }
-    // pines on the near ranges
+    // pines on the near ranges: a leaning trunk and tiers of needle clusters, each a fan of short strokes
     if (spec.pines) {
-      for (let i = 0; i < (L / 55) * spec.pines; i++) {
-        const x = r() * L, y = yR(x) + 2, s = (0.7 + r() * 0.7) * spec.pines * 0.85;
-        if (x < 20 || x > L - 20) continue;
-        g.strokeStyle = rgba(P.line, 0.75); g.lineWidth = 0.9 * s;
-        g.beginPath(); g.moveTo(x, y); g.lineTo(x + (r() - 0.5) * 3, y - 20 * s); g.stroke();
+      g.lineCap = "round";
+      for (let i = 0; i < (L / 70) * spec.pines; i++) {
+        const x = r() * L, y = yR(x) + 2, s = (0.7 + r() * 0.6) * spec.pines * 0.8;
+        if (x < 24 || x > L - 24) continue;
+        const lean = (r() - 0.5) * 5 * s, hT = (15 + r() * 8) * s;
+        g.strokeStyle = rgba(P.line, 0.8); g.lineWidth = 0.9 * s;
+        g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + lean * 0.2, y - hT * 0.5, x + lean, y - hT); g.stroke();
         for (let k = 0; k < 4; k++) {
-          const yy = y - 7 * s - k * 4.2 * s, ww = (7 - k * 1.4) * s;
-          g.fillStyle = rgba(P.pine, 0.92); g.beginPath(); g.ellipse(x + (r() - 0.5) * 2, yy, ww, 1.9 * s, (r() - 0.5) * 0.2, 0, Math.PI * 2); g.fill();
+          const u = 0.38 + k * 0.2, side = k % 2 ? 1 : -1;
+          const cx = x + lean * u + side * 2.2 * s * (1 - u * 0.5), cy = y - hT * u, rad = (6 - k * 1) * s;
+          g.fillStyle = rgba(P.pine, 0.32);
+          g.beginPath(); g.ellipse(cx, cy - rad * 0.18, rad, rad * 0.32, 0, 0, Math.PI * 2); g.fill();
+          g.strokeStyle = rgba(P.pine, 0.95); g.lineWidth = 0.65 * Math.min(1.4, s);
+          g.beginPath();
+          for (let j = 0; j <= 8; j++) {
+            const a = Math.PI * (1.04 + 0.92 * j / 8);
+            g.moveTo(cx, cy); g.lineTo(cx + Math.cos(a) * rad, cy + Math.sin(a) * rad * 0.5);
+          }
+          g.stroke();
         }
       }
     }
@@ -164,7 +167,7 @@
   function build() {
     const box = canvas.getBoundingClientRect();
     W = Math.max(1, box.width); H = Math.max(1, box.height);
-    DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+    DPR = Math.min(window.devicePixelRatio || 1, W < 820 ? 1.5 : 2);
     canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR);
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     L = Math.max(1600, Math.min(2800, Math.ceil(W * 1.4)));
@@ -202,6 +205,10 @@
       const off = (t * s.spec.speed) % L;
       for (let x = -off; x < W; x += L) ctx.drawImage(s.c, x, s.y, L, s.c.height / DPR);
     }
+    // the scroll fades into bare silk at its lower edge
+    const fade = ctx.createLinearGradient(0, H * 0.84, 0, H);
+    fade.addColorStop(0, rgba(P.silk, 0)); fade.addColorStop(1, rgba(P.silk, 1));
+    ctx.fillStyle = fade; ctx.fillRect(0, H * 0.84, W, H * 0.16 + 1);
     drawGeese();
     // wash of bare silk behind the title, as a painter leaves space for the inscription
     const wash = W < 820 ? ctx.createLinearGradient(0, 0, 0, H) : ctx.createLinearGradient(0, 0, W, 0);

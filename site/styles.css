@@ -73,8 +73,8 @@ sup { font-size: 0.62em; line-height: 0; }
   border-bottom: 1px solid color-mix(in srgb, var(--rule) 60%, transparent);
 }
 .mark { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font: 600 15px/1 var(--sans); letter-spacing: 0.01em; white-space: nowrap; }
-.mark svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
-.mark svg path:last-child { stroke: var(--amber); }
+.mark svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.mark svg path:last-child { stroke: var(--teal); }
 .mark i { font-style: normal; font: 600 16px/1 var(--serif); color: var(--teal); }
 .bar nav { display: flex; gap: 4px; margin-left: auto; }
 .bar nav a {
@@ -263,7 +263,7 @@ h3 { font-family: var(--serif); font-weight: 500; }
 .ledger td { padding: 16px 16px 16px 0; color: var(--ink-soft); vertical-align: top; }
 .ledger tbody tr { border-bottom: 1px solid var(--rule-soft); }
 .ledger tbody tr:nth-child(3) th { color: var(--teal); }
-.ledger tbody tr:nth-child(3) { background: linear-gradient(90deg, color-mix(in srgb, var(--teal) 8%, transparent), transparent 80%); }
+.ledger tbody tr:nth-child(3) th { box-shadow: inset 3px 0 0 var(--teal); padding-left: 14px; }
 
 /* §7 problems */
 .problems { display: grid; gap: 40px; }
@@ -285,9 +285,8 @@ h3 { font-family: var(--serif); font-weight: 500; }
 .problem dd { margin: 0; font-size: 15px; color: var(--ink-soft); }
 
 .closing { margin: 80px auto 0; max-width: 840px; padding: 0; text-align: center; position: relative; }
-.closing::before { content: ""; display: block; width: 64px; height: 30px; margin: 0 auto 26px; background:
-  linear-gradient(var(--amber), var(--amber)) 0 50% / 100% 1.5px no-repeat,
-  radial-gradient(circle at 50% 100%, transparent 13px, var(--amber) 13.5px 15px, transparent 15.5px) 50% 0 / 32px 30px no-repeat; }
+.closing::before { content: ""; display: block; width: 72px; height: 1.5px; margin: 0 auto 26px; background: var(--amber); }
+.closing::after { content: ""; position: absolute; left: 50%; top: -13px; width: 26px; height: 14px; transform: translateX(-50%); background: var(--amber); clip-path: polygon(0 100%, 36% 0, 54% 40%, 66% 22%, 100% 100%, 88% 100%, 66% 46%, 54% 64%, 36% 18%, 12% 100%); }
 .closing p { margin: 0; font: 400 clamp(21px, 2.4vw, 29px)/1.45 var(--serif); text-wrap: balance; }
 
 /* §8 library */
@@ -327,7 +326,8 @@ h3 { font-family: var(--serif); font-weight: 500; }
 .bib-head { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid color-mix(in srgb, var(--paper) 18%, transparent); font: 500 11.5px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
 .copy { padding: 7px 12px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--paper) 35%, transparent); background: transparent; color: var(--paper); font: 500 12px/1 var(--mono); cursor: pointer; }
 .copy:hover { background: color-mix(in srgb, var(--paper) 12%, transparent); }
-.bib pre { margin: 0; padding: 18px; overflow-x: auto; font: 12.5px/1.65 var(--mono); white-space: pre; scrollbar-width: thin; }
+.bib pre { margin: 0; padding: 18px; font: 12.5px/1.65 var(--mono); white-space: normal; }
+.bib pre span { display: block; white-space: pre-wrap; overflow-wrap: anywhere; padding-left: 17ch; text-indent: -17ch; }
 .contact { margin: 0; padding: 12px 18px 16px; font-size: 13.5px; color: color-mix(in srgb, var(--paper) 70%, transparent); }
 .contact a { color: var(--paper); }
 .cite-grid .minor { margin-top: 0; }
@@ -339,9 +339,9 @@ h3 { font-family: var(--serif); font-weight: 500; }
 
 /* Footer */
 .foot { margin-top: 120px; position: relative; }
-.foot-strata { display: block; width: 100%; height: 60px; fill: none; stroke: var(--ink); stroke-width: 1; vector-effect: non-scaling-stroke; opacity: .45; }
-.foot-strata path { vector-effect: non-scaling-stroke; }
-.foot-strata path:nth-child(3) { stroke: var(--teal); opacity: .9; }
+.foot-range { display: block; width: 100%; height: 72px; }
+.foot-range .far { fill: color-mix(in srgb, var(--teal) 16%, transparent); }
+.foot-range .near { fill: color-mix(in srgb, var(--teal) 34%, var(--paper-2)); }
 .foot-in { background: var(--paper-2); padding: 36px var(--gutter) 44px; text-align: center; font-size: 14px; color: var(--ink-soft); }
 .foot-in p { margin: 4px 0; }
 .foot-in b { color: var(--ink); font-weight: 600; }

@@ -113,6 +113,10 @@
   }), { rootMargin: "-45% 0px -50% 0px" });
   $$("main .sec").forEach((s) => spy.observe(s));
 
+  // BibTeX: one block per line, so long values wrap with a hanging indent; textContent keeps the newlines for copying
+  const bib = document.getElementById("bibtex");
+  bib.innerHTML = bib.textContent.split("\n").map((l) => `<span>${esc(l)}</span>`).join("\n");
+
   // Copy BibTeX
   $$("[data-copy]").forEach((b) => b.addEventListener("click", async () => {
     const text = document.getElementById(b.dataset.copy).textContent;
