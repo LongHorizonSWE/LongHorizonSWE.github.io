@@ -123,6 +123,13 @@ h1 em { font-style: normal; color: var(--teal); }
   font: 500 14.5px/1 var(--sans); transition: border-color .2s, transform .2s, background .2s;
 }
 .btn:hover { border-color: var(--ink); text-decoration: none; transform: translateY(-1px); }
+.btn { position: relative; overflow: hidden; isolation: isolate; }
+/* ink spreading from the point of contact */
+.btn::after { content: ""; position: absolute; left: var(--x, 50%); top: var(--y, 50%); z-index: -1; width: 280px; aspect-ratio: 1; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--teal) 24%, transparent), color-mix(in srgb, var(--teal) 8%, transparent) 72%, transparent);
+  transform: translate(-50%, -50%) scale(0); transition: transform .65s cubic-bezier(.2, .7, .2, 1); }
+.btn:hover::after { transform: translate(-50%, -50%) scale(1); }
+.btn.primary::after { background: radial-gradient(closest-side, rgba(255, 255, 255, .2), transparent); }
 .btn.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .btn.primary:hover { background: var(--teal); border-color: var(--teal); }
 .btn.small { padding: 8px 14px; font-size: 13px; }
@@ -136,15 +143,12 @@ h1 em { font-style: normal; color: var(--teal); }
 .rail { position: relative; border-top: 1px solid var(--ink); padding-top: 14px; align-self: start; position: sticky; top: 84px; }
 .num { display: block; font: 400 42px/1 var(--serif); color: var(--amber); }
 .rail-label { display: block; margin-top: 10px; font: 500 11px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
-.body { border-top: 1px solid var(--rule); padding-top: 14px; min-width: 0; }
+.body { position: relative; border-top: 1px solid var(--rule); padding-top: 14px; min-width: 0; }
 h2 {
   margin: 0 0 32px; font: 600 clamp(29px, 3.5vw, 44px)/1.16 var(--serif); letter-spacing: -0.01em; max-width: 24ch;
 }
 h2 em { font-style: normal; font-weight: 400; color: var(--teal); }
 h2 .sub { display: block; margin-top: 12px; font-size: 0.62em; line-height: 1.3; max-width: 34ch; }
-.sec .body > h2 { opacity: 0; transform: translateY(14px); transition: opacity .8s ease, transform .8s ease; }
-.sec .body > h2.in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { .sec .body > h2 { opacity: 1; transform: none; transition: none; } }
 h3 { font-family: var(--serif); font-weight: 500; }
 .intro { margin: -12px 0 32px; color: var(--ink-soft); max-width: 62ch; }
 .minor { margin: 48px 0 16px; font: 500 11.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
@@ -363,6 +367,53 @@ h3 { font-family: var(--serif); font-weight: 500; }
 .lb-nav.next { right: -20px; }
 
 /* ---------- Responsive ---------- */
+/* ---------- Motion: the page is inked in as it is read ---------- */
+.progress { position: absolute; left: 0; right: 0; bottom: -7px; height: 12px; pointer-events: none; }
+.progress svg { position: absolute; left: 0; top: 0; height: 12px; overflow: visible; }
+.progress path { fill: none; stroke-linejoin: round; stroke-linecap: round; }
+.progress .base path { stroke: color-mix(in srgb, var(--ink) 16%, transparent); stroke-width: 1; }
+.progress .fill { position: absolute; inset: 0 auto 0 0; width: calc(var(--p, 0) * 100%); overflow: hidden; }
+.progress .fill path { stroke: var(--teal); stroke-width: 1.8; }
+
+@keyframes emerge { from { opacity: 0; filter: blur(10px); transform: translateY(12px); } to { opacity: 1; filter: none; transform: none; } }
+@keyframes unroll { from { clip-path: inset(0 50% 0 50%); } to { clip-path: inset(0 0 0 0); } }
+@keyframes stamp { 0% { opacity: 0; transform: scale(2.4) rotate(-16deg); } 60% { opacity: 1; transform: scale(.9) rotate(-1deg); } 100% { opacity: 1; transform: scale(1) rotate(-2deg); } }
+@keyframes ink-ring { from { outline: 0 solid rgba(184, 57, 45, .45); outline-offset: 0; } to { outline: 10px solid rgba(184, 57, 45, 0); outline-offset: 6px; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* the title block surfaces through mist; the illustration unrolls and is sealed */
+  .hero-copy > * { animation: emerge 1.1s cubic-bezier(.2, .7, .2, 1) both; }
+  .hero-copy > :nth-child(1) { animation-delay: .1s; }
+  .hero-copy > :nth-child(2) { animation-delay: .25s; }
+  .hero-copy > :nth-child(3) { animation-delay: .5s; }
+  .hero-copy > :nth-child(4) { animation-delay: .7s; }
+  .hero-copy > :nth-child(5) { animation-delay: .9s; }
+  .hero-art { animation: unroll 1.4s cubic-bezier(.65, 0, .25, 1) .5s both; }
+  .seal { animation: stamp .55s cubic-bezier(.3, 1.5, .5, 1) 1.9s both, ink-ring .9s ease-out 2.3s both; }
+
+  /* headings bleed in from left to right, like ink taken up by silk */
+  .sec .body > h2 {
+    -webkit-mask-image: linear-gradient(90deg, #000 45%, transparent 55%); mask-image: linear-gradient(90deg, #000 45%, transparent 55%);
+    -webkit-mask-size: 240% 100%; mask-size: 240% 100%; -webkit-mask-position: 100% 0; mask-position: 100% 0; filter: blur(4px);
+    transition: -webkit-mask-position 1.5s cubic-bezier(.3, .6, .2, 1), mask-position 1.5s cubic-bezier(.3, .6, .2, 1), filter 1.2s ease;
+  }
+  .sec .body > h2.in { -webkit-mask-position: 0 0; mask-position: 0 0; filter: none; }
+
+  /* section rules are drawn as each section arrives */
+  .rail, .body { border-top-color: transparent; }
+  .rail::before, .body::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--ink); transform: scaleX(0); transform-origin: left; transition: transform 1.2s cubic-bezier(.65, 0, .25, 1); }
+  .body::before { background: var(--rule); transition-delay: .2s; }
+  .sec.in .rail::before, .sec.in .body::before { transform: none; }
+
+  /* plates unroll from their centre, and their captions follow */
+  .plate .plate-img { clip-path: inset(0 50% 0 50%); transition: clip-path 1.3s cubic-bezier(.65, 0, .25, 1); }
+  .plate.in .plate-img { clip-path: inset(0 0 0 0); }
+  .plate figcaption { opacity: 0; transform: translateY(8px); transition: opacity .8s ease .6s, transform .8s ease .6s; }
+  .plate.in figcaption { opacity: 1; transform: none; }
+  .lightbox[open] figure { animation: unroll .7s cubic-bezier(.65, 0, .25, 1) both; }
+}
+@media (max-width: 900px) { .rail::before { display: none; } }
+
 @media (max-width: 1080px) {
   .bar nav { display: none; }
   .hero-inner { grid-template-columns: 1fr; }

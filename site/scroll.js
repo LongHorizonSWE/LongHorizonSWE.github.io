@@ -28,6 +28,9 @@
   ];
 
   let W = 0, H = 0, DPR = 1, L = 0, P = PALETTES.light, strips = [], t = 0, last = 0, running = false, visible = true;
+  // pointer and scroll parallax: the pointer target, its eased value, and the page scroll
+  let tx = 0, ty = 0, px = 0, py = 0, sy = 0;
+  const ease01 = (v) => { v = Math.min(1, Math.max(0, v)); return v * v * (3 - 2 * v); };
 
   const rng = (seed) => () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
   const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
@@ -185,7 +188,7 @@
     const top = H * (W < 820 ? 0.42 : 0.13);
     const scale = W < 820 ? 0.85 : 1;
     ctx.save();
-    ctx.strokeStyle = P.goose; ctx.globalAlpha = 0.72; ctx.lineWidth = 1.35; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.strokeStyle = P.goose; ctx.globalAlpha = 0.72 * (still.matches ? 1 : ease01((t - 1.6) / 1.2)); ctx.lineWidth = 1.35; ctx.lineCap = "round"; ctx.lineJoin = "round";
     for (const g of GEESE) {
       const x = lead + g.dx * scale, y = top + g.dy * scale + Math.sin(t * 0.9 + g.ph) * 1.6;
       // two wings arching up from the body, their tips rising and falling with the beat
@@ -201,10 +204,18 @@
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
-    for (const s of strips) {
-      const off = (t * s.spec.speed) % L;
-      for (let x = -off; x < W; x += L) ctx.drawImage(s.c, x, s.y, L, s.c.height / DPR);
+    // On load the ranges are inked in from the farthest to the nearest. Nearer ranges follow the pointer further, and
+    // farther ones lag behind the page as it scrolls, so the scroll reads in depth.
+    for (let i = 0; i < strips.length; i++) {
+      const s = strips[i], depth = i / (strips.length - 1);
+      const bloom = still.matches ? 1 : ease01((t - 0.15 - i * 0.28) / 1.1);
+      if (!bloom) continue;
+      const off = (((t * s.spec.speed + px * depth * 26) % L) + L) % L;
+      const dy = py * (2 + depth * 7) + sy * (1 - depth) * 0.22 + (1 - bloom) * 16;
+      ctx.globalAlpha = bloom;
+      for (let x = -off; x < W; x += L) ctx.drawImage(s.c, x, s.y + dy, L, s.c.height / DPR);
     }
+    ctx.globalAlpha = 1;
     // the scroll fades into bare silk at its lower edge
     const fade = ctx.createLinearGradient(0, H * 0.84, 0, H);
     fade.addColorStop(0, rgba(P.silk, 0)); fade.addColorStop(1, rgba(P.silk, 1));
@@ -221,6 +232,8 @@
     if (!running) return;
     t += Math.min(0.064, (now - (last || now)) / 1000);
     last = now;
+    px += (tx - px) * 0.045; py += (ty - py) * 0.045;
+    sy = Math.min(window.scrollY, H);
     draw();
     requestAnimationFrame(frame);
   }
@@ -232,6 +245,7 @@
   const rebuild = () => { build(); draw(); };
 
   rebuild(); start();
+  addEventListener("pointermove", (e) => { tx = (e.clientX / innerWidth) * 2 - 1; ty = (e.clientY / innerHeight) * 2 - 1; }, { passive: true });
   let rt = 0;
   new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(rebuild, 120); }).observe(canvas);
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; visible ? start() : stop(); }).observe(canvas);

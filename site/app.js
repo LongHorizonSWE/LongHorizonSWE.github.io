@@ -102,6 +102,46 @@
     if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
   }), { threshold: 0.2 });
   $$(".gap-chart, .sec .body > h2").forEach((el) => io.observe(el));
+  // sections and plates can be taller than the viewport, so they reveal as soon as they enter it
+  const io2 = new IntersectionObserver((entries) => entries.forEach((en) => {
+    if (en.isIntersecting) { en.target.classList.add("in"); io2.unobserve(en.target); }
+  }), { rootMargin: "0px 0px -12% 0px" });
+  $$(".sec, .plate").forEach((el) => io2.observe(el));
+
+  // Buttons: the ink spreads from where the pointer enters
+  $$(".btn").forEach((b) => b.addEventListener("pointerenter", (e) => {
+    const r = b.getBoundingClientRect();
+    b.style.setProperty("--x", `${e.clientX - r.left}px`); b.style.setProperty("--y", `${e.clientY - r.top}px`);
+  }));
+
+  // Reading progress: a ridgeline under the header that fills with ink as the page is read
+  const prog = document.createElement("div");
+  prog.className = "progress"; prog.setAttribute("aria-hidden", "true");
+  $(".bar").append(prog);
+  function drawRidge() {
+    const w = prog.clientWidth;
+    let d = "";
+    for (let x = 0; x <= w; x += 6) {
+      const u = x / w;
+      const y = 9 - 6.5 * Math.abs(Math.sin(u * 9.3 + 0.6)) * (0.55 + 0.45 * Math.sin(u * 3.1 + 1.2)) - 1.5 * Math.abs(Math.sin(u * 41));
+      d += `${x ? "L" : "M"}${x} ${y.toFixed(1)}`;
+    }
+    const svg = `<svg width="${w}" viewBox="0 0 ${w} 12"><path d="${d}"/></svg>`;
+    prog.innerHTML = `<div class="base">${svg}</div><div class="fill">${svg}</div>`;
+  }
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      prog.style.setProperty("--p", max > 0 ? Math.min(1, scrollY / max).toFixed(4) : 0);
+      ticking = false;
+    });
+  };
+  drawRidge(); onScroll();
+  addEventListener("scroll", onScroll, { passive: true });
+  addEventListener("resize", () => { drawRidge(); onScroll(); });
 
   // Active section in the navigation
   const links = new Map($$(".bar nav a").map((a) => [a.getAttribute("href").slice(1), a]));
