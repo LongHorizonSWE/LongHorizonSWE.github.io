@@ -14,8 +14,8 @@
 
   // Daylight is mineral pigment on silk; night is the gold-outlined manner (jinbi) on dark silk.
   const PALETTES = {
-    light: { silk: "#f2ede3", azure: "#2a5f8f", deep: "#1b4266", mal: "#3e8a6a", ochre: "#b9884c", line: "#22313a", moss: "#173b30", pine: "#2b5b45", goose: "#2b2a24" },
-    dark: { silk: "#0e1312", azure: "#3a6e98", deep: "#22496c", mal: "#33775c", ochre: "#3b3f33", line: "#d1ad66", moss: "#0b1d17", pine: "#1f4a38", goose: "#dccb9c" },
+    light: { silk: "#f2ede3", azure: "#2a5f8f", deep: "#1b4266", fibre: "#1b4266", mal: "#3e8a6a", ochre: "#b9884c", line: "#22313a", moss: "#173b30", pine: "#2b5b45", goose: "#2b2a24" },
+    dark: { silk: "#0e1312", azure: "#3e5466", deep: "#5b7184", fibre: "#0a100f", mal: "#2f4038", ochre: "#1d221e", line: "#bfa063", moss: "#070d0b", pine: "#55705c", goose: "#d6c59a" },
   };
 
   // From the far range to the near bank. base and amp are fractions of the hero height; speed is px per second.
@@ -116,7 +116,7 @@
         y += len / 6;
         g.lineTo(x + (r() - 0.5) * 1.6, y);
       }
-      g.strokeStyle = rgba(r() < 0.8 ? P.deep : P.line, (0.1 + r() * 0.18) * (1 - spec.haze * 0.85));
+      g.strokeStyle = rgba(r() < (P === PALETTES.dark ? 0.94 : 0.8) ? P.fibre : P.line, (0.1 + r() * 0.18) * (1 - spec.haze * 0.85));
       g.lineWidth = 0.5 + r() * 0.7; g.stroke();
     }
     g.restore();
