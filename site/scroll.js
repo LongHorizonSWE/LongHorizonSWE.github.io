@@ -15,7 +15,7 @@
   // Daylight is mineral pigment on silk; night is the gold-outlined manner (jinbi) on dark silk.
   const PALETTES = {
     light: { silk: "#f2ede3", azure: "#2a5f8f", deep: "#1b4266", fibre: "#1b4266", mal: "#3e8a6a", ochre: "#b9884c", line: "#22313a", moss: "#173b30", pine: "#2b5b45", goose: "#2b2a24" },
-    dark: { silk: "#0e1312", azure: "#182224", deep: "#1a2427", fibre: "#060a09", mal: "#162020", ochre: "#121a19", line: "#bfa063", moss: "#070d0b", pine: "#55705c", goose: "#d6c59a" },
+    dark: { silk: "#0e1312", azure: "#4b585d", deep: "#4f5c61", fibre: "#222b2d", mal: "#47544f", ochre: "#38423f", line: "#bfa063", moss: "#070d0b", pine: "#55705c", goose: "#d6c59a" },
   };
 
   // From the far range to the near bank. base and amp are fractions of the hero height; speed is px per second.
