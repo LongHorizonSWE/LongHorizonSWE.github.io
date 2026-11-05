@@ -10,7 +10,7 @@ This repository hosts the project website for the survey. The `longhorizonswe.gi
 
 ```text
 index.html             page text and structure
-site/styles.css        design: paper and ink, light and dark themes
+site/styles.css        design: paper and ink
 site/scroll.js         the hero painting, an endless blue-and-green landscape handscroll drawn in the browser
 site/content.js        plate captions and the open-problems table
 site/app.js            plates and lightbox, open problems, chain demonstration, reference library

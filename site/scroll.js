@@ -9,14 +9,9 @@
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
   const still = matchMedia("(prefers-reduced-motion: reduce)");
-  const darkQ = matchMedia("(prefers-color-scheme: dark)");
-  const isDark = () => { const t = document.documentElement.dataset.theme; return t ? t === "dark" : darkQ.matches; };
 
-  // Daylight is mineral pigment on silk; night is the gold-outlined manner (jinbi) on dark silk.
-  const PALETTES = {
-    light: { silk: "#f2ede3", azure: "#2a5f8f", deep: "#1b4266", fibre: "#1b4266", mal: "#3e8a6a", ochre: "#b9884c", line: "#22313a", moss: "#173b30", pine: "#2b5b45", goose: "#2b2a24" },
-    dark: { silk: "#0e1312", azure: "#4b585d", deep: "#4f5c61", fibre: "#222b2d", mal: "#47544f", ochre: "#38423f", line: "#bfa063", moss: "#070d0b", pine: "#55705c", goose: "#d6c59a" },
-  };
+  // Mineral pigment on silk
+  const P = { silk: "#f2ede3", azure: "#2a5f8f", deep: "#1b4266", fibre: "#1b4266", mal: "#3e8a6a", ochre: "#b9884c", line: "#22313a", moss: "#173b30", pine: "#2b5b45", goose: "#2b2a24" };
 
   // From the far range to the near bank. base and amp are fractions of the hero height; speed is px per second.
   const LAYERS = [
@@ -27,7 +22,7 @@
     { base: 0.95, amp: 0.09, depth: 0.12, speed: 27, haze: 0, seed: 71, pines: 1.6 },
   ];
 
-  let W = 0, H = 0, DPR = 1, L = 0, P = PALETTES.light, strips = [], t = 0, last = 0, running = false, visible = true;
+  let W = 0, H = 0, DPR = 1, L = 0, strips = [], t = 0, last = 0, running = false, visible = true;
   // pointer and scroll parallax: the pointer target, its eased value, and the page scroll
   let tx = 0, ty = 0, px = 0, py = 0, sy = 0;
   const ease01 = (v) => { v = Math.min(1, Math.max(0, v)); return v * v * (3 - 2 * v); };
@@ -116,7 +111,7 @@
         y += len / 6;
         g.lineTo(x + (r() - 0.5) * 1.6, y);
       }
-      g.strokeStyle = rgba(r() < (P === PALETTES.dark ? 0.94 : 0.8) ? P.fibre : P.line, (0.1 + r() * 0.18) * (1 - spec.haze * 0.85));
+      g.strokeStyle = rgba(r() < 0.8 ? P.fibre : P.line, (0.1 + r() * 0.18) * (1 - spec.haze * 0.85));
       g.lineWidth = 0.5 + r() * 0.7; g.stroke();
     }
     g.restore();
@@ -174,7 +169,6 @@
     canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR);
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     L = Math.max(1600, Math.min(2800, Math.ceil(W * 1.4)));
-    P = isDark() ? PALETTES.dark : PALETTES.light;
     strips = LAYERS.map(makeStrip);
   }
 
@@ -251,6 +245,4 @@
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; visible ? start() : stop(); }).observe(canvas);
   document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));
   still.addEventListener("change", () => (still.matches ? stop() : start()));
-  document.addEventListener("themechange", rebuild);
-  darkQ.addEventListener("change", rebuild);
 })();

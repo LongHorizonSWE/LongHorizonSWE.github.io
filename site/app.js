@@ -1,4 +1,4 @@
-// Page behaviour: theme, plates and lightbox, open problems, the chain demonstration, and the reference library.
+// Page behaviour: plates and lightbox, open problems, the chain demonstration, and the reference library.
 (() => {
   const C = window.SURVEY_CONTENT;
   const $ = (sel, root = document) => root.querySelector(sel);
@@ -6,15 +6,6 @@
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII"];
   const file = (n) => `assets/figures/figure-${n}.${n === 1 ? "webp" : "png"}`;
-
-  // Theme: follows the system until the reader picks one.
-  const root = document.documentElement;
-  $(".theme").addEventListener("click", () => {
-    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-    root.dataset.theme = dark ? "light" : "dark";
-    try { localStorage.setItem("lhswe-theme", root.dataset.theme); } catch (e) {}
-    document.dispatchEvent(new Event("themechange"));
-  });
 
   // Plates, shown in full with their captions
   const grid = $("[data-plates]");
