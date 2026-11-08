@@ -1,10 +1,10 @@
 # Long-Horizon Software Engineering Agents: From Tasks to Projects
 
-Project website: **https://longhorizonswe.github.io/**
+Project website: **https://LongHorizonSWE.github.io/**
 
 Main project repository: **[Awesome-LongHorizonSWE](https://github.com/LongHorizonSWE/Awesome-LongHorizonSWE)**
 
-This repository hosts the project website for the survey. The `longhorizonswe.github.io` repository name provides the organization website's root URL; the main project retains the `Awesome-LongHorizonSWE` name.
+This repository hosts the project website for the survey. The `LongHorizonSWE.github.io` repository name provides the organization website's root URL; the main project retains the `Awesome-LongHorizonSWE` name.
 
 ## Layout
 
